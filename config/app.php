@@ -171,11 +171,22 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Org\Jvhsa\Surgiscript\Providers\AppServiceProvider::class,
+        Org\Jvhsa\Surgiscript\Providers\AuthServiceProvider::class,
+        // Org\Jvhsa\Surgiscript\Providers\BroadcastServiceProvider::class,
+        Org\Jvhsa\Surgiscript\Providers\EventServiceProvider::class,
+        Org\Jvhsa\Surgiscript\Providers\RouteServiceProvider::class,
+
+        /*
+         * Zizaco Entrust
+         */
+        Zizaco\Entrust\EntrustServiceProvider::class,
+
+        /*
+        * Tenanti package
+        */
+        Orchestra\Tenanti\TenantiServiceProvider::class,
+        Orchestra\Tenanti\CommandServiceProvider::class,
 
     ],
 
@@ -225,7 +236,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Tenanti' => Orchestra\Support\Facades\Tenanti::class,
     ],
+
+    'default_password' => env('DEFAULT_PW', 'secret')
 
 ];
