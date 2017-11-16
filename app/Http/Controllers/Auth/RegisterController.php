@@ -2,10 +2,15 @@
 
 namespace Org\Jvhsa\Surgiscript\Http\Controllers\Auth;
 
-use Org\Jvhsa\Surgiscript\User;
-use Org\Jvhsa\Surgiscript\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Org\Jvhsa\Surgiscript\Http\Controllers\Controller;
+use Org\Jvhsa\Surgiscript\Mail\UserRegistered;
+use Org\Jvhsa\Surgiscript\User;
 
 class RegisterController extends Controller
 {
@@ -27,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -65,7 +70,47 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            // 'email_token' => str_random(40),
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+
+        event(new Registered($user));
+
+        // confirm uri
+        // $confirm_uri = ""
+        // generate email
+        Mail::to($user)->send(new UserRegistered($user));
+
+        return redirect()->route('login')
+                         ->with('status', 'Please check your email to confirm your registration');
+        // return $this->registered($request, $user)
+        //                 ?: redirect($this->redirectPath());
+    }
+
+    /**
+     * Confirms email for the user
+     * @param  String $email_token User email token
+     * @return Redirect            Redirects user to login page
+     */
+    public function confirmEmail(Request $request)
+    {
+        $user = User::where('email_token', '=', $request->email_token)
+            ->firstOrFail()
+            ->confirmEmail();
+
+        return redirect()->route('login')->with('status', 'Thank you for confirming your email. You may now login.');
     }
 }

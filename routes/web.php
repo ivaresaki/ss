@@ -15,20 +15,14 @@
  * Routes for subdomains
  */
 Route::group(['domain' => '{subdomain}.surgiscript.dev'], function(){
-	Route::get('/', function () {
-		return view('welcome');
-	});
 
-	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/', 'HomeController@index')->name('home');
 
 	Route::resource('posts', 'PostController');
 
 	Auth::routes();
-	// Route::get('login', 'Auth\LoginController@showLoginForm')->name('login')->middleware('guest');
- //    Route::post('login', 'Auth\LoginController@login')->middleware('guest');
 
- //    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register')->middleware('guest');
- //    Route::post('register', 'Auth\RegisterController@register')->middleware('guest');
+	Route::get('/register/confirm/{email_token}', 'Auth\RegisterController@confirmEmail')->name('email.confirm');
 });
 
 /**
@@ -55,10 +49,8 @@ Route::group(['middleware' => ['auth']], function(){
 	->name('signup.reject');
 });
 
-Route::get('/', function () {
-	return view('welcome');
-});
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
+
+Route::get('/register/confirm/{email_token}', 'Auth\RegisterController@confirmEmail')->name('email.confirm');

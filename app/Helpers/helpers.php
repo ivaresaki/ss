@@ -26,3 +26,13 @@ function isSubdomain()
 {
     return !empty(session()->get('subdomain'));
 }
+
+// function getCurrentSubdomain()
+// {
+// 	if(!isSubdomain())
+// 	{
+// 		return '';
+// 	}
+
+// 	return 
+// }

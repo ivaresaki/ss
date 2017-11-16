@@ -112,7 +112,11 @@
                 </div>
             </div>
         </nav>
-        <div class="container">     
+        <div class="container">
+
+            @include('partials.errors')
+            @include('partials.message')
+
             @yield('content')
         </div>
     </div>

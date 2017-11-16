@@ -5,7 +5,9 @@ namespace Org\Jvhsa\Surgiscript\Providers;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Support\Facades\Tenanti;
 use Org\Jvhsa\Surgiscript\Observers\SiteObserver;
+use Org\Jvhsa\Surgiscript\Observers\UserObserver;
 use Org\Jvhsa\Surgiscript\Site;
+use Org\Jvhsa\Surgiscript\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Site::observe(new SiteObserver());
+        // User::observe(new UserObserver());
 
         Tenanti::connection('tenants', function (Site $entity, array $config) {
             $config['database'] = "surgiscript_{$entity->slug}"; 
